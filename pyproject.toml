@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "live-journal-scraper"
+version = "0.1.0"
+description = ""
+authors = ["MankoMax <fanatscape@gmail.com>"]
+readme = "README.md"
+packages = [{include = "live_journal_scraper"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bs4 = "^0.0.1"
+requests = "^2.28.1"
+pillow = "^9.3.0"
+fake-useragent = "^1.1.1"
+python-dotenv = "^0.21.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
