@@ -5,8 +5,6 @@ from dotenv import dotenv_values, load_dotenv
 load_dotenv()
 
 CALENDAR_PAGE = os.getenv("CALENDAR_PAGE")
-TEST_LINKS = ["https://navalny.livejournal.com/209488.html", "https://navalny.livejournal.com/209963.html", "https://navalny.livejournal.com/616157.html"]
-
 
 class Main(Scrapper):
         
@@ -20,7 +18,7 @@ class Main(Scrapper):
         posts_links = self.get_posts_links(days_links)
         print(len(posts_links))
 
-        for link in TEST_LINKS:
+        for link in posts_links:
             self.save_post(link)
             
 Main(CALENDAR_PAGE).main()
