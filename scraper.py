@@ -12,6 +12,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver import Keys
 from docx import Document
+from PIL import UnidentifiedImageError
 
 load_dotenv()
 
@@ -28,11 +29,6 @@ class Scrapper():
         self.headers = {
             'User-Agent': self.ua.random
             }
-
-        self.proxies = {
-            'http': HTTP_PROXY,
-            'https': HTTPS_PROXY,
-            } 
         
         options = Options()
         options.add_argument('--headless')
@@ -45,7 +41,7 @@ class Scrapper():
                         
     def get_calendar_years(self):
         urls = []
-        req = requests.get(self.calendar_page, headers=self.headers, proxies=self.proxies)
+        req = requests.get(self.calendar_page, headers=self.headers)
         soup = BeautifulSoup(req.text, "html.parser")
         text = soup.select("div.entry-text")
         for i in text:
@@ -88,7 +84,7 @@ class Scrapper():
         dir = f"posts/{post_from_link(url)}"
         if not os.path.exists(dir):
             os.makedirs(dir)
-        req = requests.get(url, headers=self.headers, proxies=self.proxies)
+        req = requests.get(url, headers=self.headers)
         soup = BeautifulSoup(req.text, "html.parser")
         heading = soup.find('h1')
         text = soup.find('div', class_="b-singlepost-bodywrapper")
@@ -99,12 +95,18 @@ class Scrapper():
                 count += 1
                 res = link.get('src')
                 if '.png' in res:
-                    img = Image.open(requests.get(res, stream = True).raw)
-                    img.save(f"posts/{post_from_link(url)}/{count+1}.png")
+                    try:
+                        img = Image.open(requests.get(res, stream = True).raw)
+                        img.save(f"posts/{post_from_link(url)}/{count+1}.png")
+                    except:
+                        pass
                 if '.jpg' in res:
-                    img = Image.open(requests.get(res, stream = True).raw)
-                    img.save(f"posts/{post_from_link(url)}/{count+1}.jpg")
-        
+                    try:
+                        img = Image.open(requests.get(res, stream = True).raw)
+                        img.save(f"posts/{post_from_link(url)}/{count+1}.jpg")
+                    except:
+                        pass
+            
         document = Document()
         try:
             document.add_heading(f'{heading.get_text()}\n', level=1)
