@@ -19,7 +19,8 @@ class Main(Scrapper):
         print(len(posts_links))
 
         for link in posts_links:
-            self.save_post(link)
+            with futures.ThreadPoolExecutor() as executor:
+                executor.submit(self.save_post, link)
             
 Main(CALENDAR_PAGE).main()
 
